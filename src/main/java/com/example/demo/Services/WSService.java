@@ -1,7 +1,7 @@
 package com.example.demo.Services;
 
 
-import com.example.demo.Entity.ResponseMessage;
+import com.example.demo.Entity.Notification;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -17,15 +17,15 @@ public class WSService {
         this.notificationService = notificationService;
     }
     public void NotifyFrontend(final String message) {
-        ResponseMessage response = new ResponseMessage(message);
-        notificationService.sendGlobalNotification();
+        Notification response = new Notification(message);
+        notificationService.sendGlobalNotification("Notification", message);
 
         messagingTemplate.convertAndSend("/pepsi_rh/messages",response);
 
     }
     public void NotifyUser(final String id , final String message) {
-        ResponseMessage response = new ResponseMessage(message);
-        notificationService.sendPrivateNotification(id);
+        Notification response = new Notification(message);
+        notificationService.sendPrivateNotification(id, "Notification", message);
         messagingTemplate.convertAndSendToUser(id,"/pepsi_rh/private-messages",response);
 
     }

@@ -10,7 +10,7 @@ import org.springframework.web.util.HtmlUtils;
 import java.security.Principal;
 
 import com.example.demo.Entity.Message;
-import com.example.demo.Entity.ResponseMessage;
+import com.example.demo.Entity.Notification;
 import com.example.demo.Services.NotificationService;
 
 @Controller
@@ -22,17 +22,17 @@ public class MessageController {
 
     @MessageMapping("/message")
     @SendTo("/pepsi_rh/messages")
-public ResponseMessage getMessage(final Message message) throws InterruptedException {
+public Notification getMessage(final Message message) throws InterruptedException {
      Thread.sleep(1000);
-     notificationService.sendGlobalNotification();
-     return new ResponseMessage(HtmlUtils.htmlEscape(message.getMessageContent()));
+     notificationService.sendGlobalNotification("Message", message.getMessageContent());
+     return new Notification(HtmlUtils.htmlEscape(message.getMessageContent()));
 }
 
     @MessageMapping("/private-message")
     @SendToUser("/pepsi_rh/private-messages")
-    public ResponseMessage getPrivateMessage(final Message message, final Principal principal) throws InterruptedException {
+    public Notification getPrivateMessage(final Message message, final Principal principal) throws InterruptedException {
         Thread.sleep(1000);
-        notificationService.sendPrivateNotification(principal.getName());
-        return new ResponseMessage(HtmlUtils.htmlEscape("Sending Private message to User"  + principal.getName() + " : " + message.getMessageContent()));
+        notificationService.sendPrivateNotification(principal.getName(), "Message", message.getMessageContent());
+        return new Notification(HtmlUtils.htmlEscape("Sending Private message to User"  + principal.getName() + " : " + message.getMessageContent()));
     }
 }

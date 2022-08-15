@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.Config;
 
 import com.sun.security.auth.UserPrincipal;
 import org.slf4j.Logger;

@@ -28,7 +28,7 @@ public class CollaboratorRest {
 
 	@GetMapping("/")
 	public List<Collaborator> Afficher(){
-		ws.NotifyFrontend("message");
+		ws.NotifyFrontend("Someone has checked the list of employees");
 		return employeService.getAll();		
 	}
 	
