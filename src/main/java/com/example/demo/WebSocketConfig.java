@@ -1,4 +1,4 @@
-package com.example.demo.Services;
+package com.example.demo;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -11,26 +11,19 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Configuration
 @CrossOrigin(origins = {"http://localhost:4200/"})
 @EnableWebSocketMessageBroker
-public class WebSocketConfig implements WebSocketMessageBrokerConfigurer  {
 
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+    @Override
+    public void configureMessageBroker(final MessageBrokerRegistry registry) {
+     registry.enableSimpleBroker("/pepsi_rh");
+     registry.setApplicationDestinationPrefixes("/app");
+    }
 
-
-
-	@Override
-	public void registerStompEndpoints(StompEndpointRegistry stompEndpointRegistry) {
-		stompEndpointRegistry.addEndpoint("/socket")
-				.setAllowedOrigins("http://localhost:4200/")
-				.withSockJS();
-		// stompEndpointRegistry.addEndpoint("/socket")
-		// 		.setAllowedOrigins("http://localhost/")
-		// 		.withSockJS();
-	}
-
-	@Override
-	public void configureMessageBroker(MessageBrokerRegistry registry) {
-		registry.enableSimpleBroker("/pepsi_rh");
-		registry.setApplicationDestinationPrefixes("/app");
-	}
-
-	
+    @Override
+    public void registerStompEndpoints(final StompEndpointRegistry registry) {
+     registry.addEndpoint("/socket")
+             .setHandshakeHandler(new UserHandshakeHandler())
+             .setAllowedOrigins("http://localhost:4200/")
+             .withSockJS();
+    }
 }

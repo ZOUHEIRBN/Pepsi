@@ -15,20 +15,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.Entity.Collaborator;
-import com.example.demo.Entity.Notification;
 import com.example.demo.Services.CollaboratorService;
+import com.example.demo.Services.WSService;
 @CrossOrigin(origins = "*", allowedHeaders = "*") //DESKTOP-8CM1NR0:4200
 @RestController
 @RequestMapping("Collaborator")
 public class CollaboratorRest {
-	   
+	@Autowired
+	private WSService ws;
 	@Autowired
 	CollaboratorService employeService;
 
 	@GetMapping("/")
 	public List<Collaborator> Afficher(){
-		Notification n = new Notification("title", "text");
-  		n.send();
+		ws.NotifyFrontend("message");
 		return employeService.getAll();		
 	}
 	
@@ -44,8 +44,6 @@ public class CollaboratorRest {
 	
 	@GetMapping("/active")
 	public List<Collaborator> Afficheractive(){
-		Notification n = new Notification("title", "text");
-  		n.send();
 		return employeService.findActived();	
 	}
 	@DeleteMapping("/{id}")
