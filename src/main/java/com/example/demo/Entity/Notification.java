@@ -2,13 +2,30 @@ package com.example.demo.Entity;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
+@Entity
 public class Notification {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column
     private String content;
+    @Column
     private String title;
+    @Column
     private final Date timestamp = new Date();
-    private Long receiverId;
+    @ManyToOne
+    @JsonIgnore
+    private User user;
 
 
     public Notification(String content) {
@@ -20,10 +37,10 @@ public class Notification {
         this.title = title;
     }
 
-    public Notification(String content, String title, Long receiverId) {
+    public Notification(String content, String title, User receiver) {
         this.content = content;
         this.title = title;
-        this.receiverId = receiverId;
+        this.user = receiver;
     }
 
     public String getTitle() {
@@ -46,11 +63,11 @@ public class Notification {
         this.content = content;
     }
 
-    public Long getReceiverId() {
-        return receiverId;
+    public User getReceiver() {
+        return user;
     }
 
-    public void setReceiverId(Long receiverId) {
-        this.receiverId = receiverId;
+    public void setReceiverId(User receiver) {
+        this.user = receiver;
     }
 }

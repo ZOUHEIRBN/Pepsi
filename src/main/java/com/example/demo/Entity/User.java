@@ -3,20 +3,42 @@ package com.example.demo.Entity;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
 import com.example.demo.Enum.Role;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+@Entity
 public class User implements UserDetails {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column
     String username;
+    @Column
     String password;
-    List<Role> roles;
+    
+    Role roles;
+    @Column
     boolean accountNonExpired = true;
+    @Column
     boolean enabled = true;
+    @Column
     boolean accountNonLocked = true;
+    @Column
     boolean credentialsNonExpired = true;
+
+    @OneToMany(mappedBy = "user")
+    List<Notification> notifications;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
