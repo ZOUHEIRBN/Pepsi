@@ -25,7 +25,7 @@ public class Notification {
     private final Date timestamp = new Date();
     @ManyToOne
     @JsonIgnore
-    private User user;
+    private HR user;
 
 
     public Notification(String content) {
@@ -37,7 +37,7 @@ public class Notification {
         this.title = title;
     }
 
-    public Notification(String content, String title, User receiver) {
+    public Notification(String content, String title, HR receiver) {
         this.content = content;
         this.title = title;
         this.user = receiver;
@@ -63,11 +63,11 @@ public class Notification {
         this.content = content;
     }
 
-    public User getReceiver() {
+    public HR getReceiver() {
         return user;
     }
 
-    public void setReceiverId(User receiver) {
+    public void setReceiverId(HR receiver) {
         this.user = receiver;
     }
 }
