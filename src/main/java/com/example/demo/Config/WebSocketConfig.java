@@ -9,7 +9,7 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 @Configuration
-@CrossOrigin(origins = {"http://localhost:4200/"})
+@CrossOrigin(origins = "*", allowedHeaders = "*") //DESKTOP-8CM1NR0:4200
 @EnableWebSocketMessageBroker
 
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
