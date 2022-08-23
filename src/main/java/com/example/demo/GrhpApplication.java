@@ -14,6 +14,7 @@ public class GrhpApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(GrhpApplication.class, args);
+		System.out.println("\n\n\n\n");
 	}
 	 @Bean
 	    public CorsFilter corsFilter() {

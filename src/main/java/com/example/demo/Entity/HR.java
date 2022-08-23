@@ -11,12 +11,15 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.example.demo.Enum.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
+@JsonIgnoreProperties({"authorities"})
 public class HR implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +28,7 @@ public class HR implements UserDetails {
     @Column
     String username;
     @Column
+    @JsonIgnore
     String password;
     
     Role roles;
@@ -37,8 +41,25 @@ public class HR implements UserDetails {
     @Column
     boolean credentialsNonExpired = true;
 
+    String sessionId = null;
+
     @OneToMany(mappedBy = "user")
     List<Notification> notifications;
+
+    public HR() {
+        this.username = "";
+        this.password = "";
+        this.accountNonExpired = true;
+        this.enabled = true;
+        this.accountNonLocked = true;
+        this.credentialsNonExpired = true;
+
+    }
+
+    public HR(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -59,6 +80,14 @@ public class HR implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
     @Override
