@@ -1,5 +1,10 @@
 package com.example.demo.Controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import com.example.demo.Entity.HR;
 import com.example.demo.Repostory.IHR;
 
@@ -33,37 +38,54 @@ public class HRRest {
 	@Autowired
 	private BCryptPasswordEncoder encoder;
 
+	private Map<Long, String> users = new HashMap<Long, String>();
+
 	@PostMapping("/")
 	public void addUser(@RequestBody HR user){
+		
 		user.setPassword(encoder.encode(user.getPassword()));
 		hrrepo.save(user);
 	}
 	
 	@PostMapping("/login")
-	public HR login(@RequestBody HR user) throws Exception {
+	public String login(@RequestBody HR user, HttpServletRequest request) throws Exception {
 		
 		// user.setPassword(encoder.encode(user.getPassword()));
+
+		for(var u: users.keySet()){
+			System.out.println(u + ":" + users.get(u));
+		}
 		UsernamePasswordAuthenticationToken authUP = new UsernamePasswordAuthenticationToken(
 					user.getUsername(), 
 					user.getPassword());
 		Authentication authObject = null;
+		String sessionId = null;
 		try {
 			authObject = authenticationManager.authenticate(authUP);
-			System.out.println(authObject.getAuthorities());
+			// System.out.println(authObject.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(authObject);
-			String sessionId = RequestContextHolder.currentRequestAttributes().getSessionId();
-			System.out.println(sessionId);
-			user.setSessionId(sessionId);
+			sessionId = RequestContextHolder.currentRequestAttributes().getSessionId();
+			// System.out.println(sessionId);
+			// user.setSessionId(sessionId);
+			
+			System.out.println("User ID (line 75): " + user.getId());
+			
+			user = hrrepo.findByUsername(user.getUsername());
+			users.putIfAbsent(user.getId(), sessionId);
+			System.out.println("Connected!");
+			
+			request.getSession().setAttribute("USER_"+user.getId()+"_SSID", user.getId());
+			System.out.println("\n\n\n\n\n");
+
 
 
 		} catch (BadCredentialsException e) {
 			System.out.println("Bad credentials");
-			user.setSessionId(null);
 		}catch (Exception e) {
 			System.out.println(e);
 			throw(e);
 		}
-		return user;
+		return sessionId;
 	}
 	
 
