@@ -1,7 +1,7 @@
 package com.example.demo.Services;
 
-import java.util.ArrayList;
 
+import java.util.List;
 
 import com.example.demo.Entity.HR;
 import com.example.demo.Repostory.IHR;
@@ -22,8 +22,26 @@ public class HRService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        HR user = hrrepo.findByUsername(username);
-        return new User(user.getUsername(), user.getPassword(), new ArrayList<>());
+        HR hr = hrrepo.findByUsername(username);
+        UserDetails user = User.withUsername(hr.getUsername())
+        .password(hr.getPassword())
+        .authorities(hr.getAuthorities())
+        .build();
+        for(var u: user.getAuthorities()){
+            System.out.println(u);
+        }
+        return user;
+    }
+
+    public HR findByUsername(String username){
+        return hrrepo.findByUsername(username);
     }
     
+    public void addHR(HR hr){
+        hrrepo.save(hr);
+    }
+
+    public List<Object> getUserRoles(Long userId){
+        return null; //hrrepo.findRolesById(userId);
+    }
 }

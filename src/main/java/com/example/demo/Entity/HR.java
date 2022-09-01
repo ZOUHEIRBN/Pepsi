@@ -1,13 +1,18 @@
 package com.example.demo.Entity;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 
 import com.example.demo.Enum.Role;
@@ -31,7 +36,13 @@ public class HR implements UserDetails {
     @JsonIgnore
     String password;
     
-    Role roles;
+    @ElementCollection(targetClass = Role.class)
+    @JoinTable(name = "roles")
+    @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
+    List<Role> roles;
+
+
     @Column
     boolean accountNonExpired = true;
     @Column
@@ -41,7 +52,6 @@ public class HR implements UserDetails {
     @Column
     boolean credentialsNonExpired = true;
 
-    String sessionId = null;
 
     @OneToMany(mappedBy = "user")
     List<Notification> notifications;
@@ -71,7 +81,12 @@ public class HR implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(roles.toString()));
+        List<SimpleGrantedAuthority> SGAuth = new ArrayList<SimpleGrantedAuthority>();
+        for(Role r: roles){
+            SGAuth.add(new SimpleGrantedAuthority(r.toString()));
+        }
+        return SGAuth;
+        // return List.of(new SimpleGrantedAuthority(roles.toString()));
     }
 
     public String getUsername() {
@@ -90,13 +105,6 @@ public class HR implements UserDetails {
         this.password = password;
     }
 
-    public String getSessionId() {
-        return sessionId;
-    }
-
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-    }
 
     @Override
     public boolean isAccountNonExpired() {

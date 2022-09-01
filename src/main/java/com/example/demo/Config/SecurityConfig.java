@@ -36,7 +36,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      .authorizeRequests()
      .antMatchers("/hr/**").permitAll()
      .antMatchers("/socket/**").permitAll()
-     .anyRequest().authenticated();
+     .antMatchers("/Collaborator/**").permitAll() //.hasAnyAuthority("ADMIN")
+     .anyRequest().authenticated()
+     ;
     }
 
     @Bean

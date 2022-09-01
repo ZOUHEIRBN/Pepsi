@@ -4,6 +4,7 @@ package com.example.demo.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,9 @@ public class CollaboratorRest {
 
 	@GetMapping("/")
 	public List<Collaborator> Afficher(){
+		System.out.print("Requested by user with roles: ");
+		System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+		System.out.println("\n\n\n");
 		ws.NotifyFrontend("Someone has checked the list of employees");
 		return employeService.getAll();		
 	}
